@@ -1,3 +1,6 @@
+mod mini_project;
+use mini_project::{Student, Registry};
+
 fn main() {
     
     let x = 5;
@@ -6,9 +9,30 @@ fn main() {
     //ex_2();
     //ex_3_ownership_transfer();
 
-    let mut text = String::from("Hello");
-    mutate(&mut text);
-    println!("{text}");
+    //let mut text = String::from("Hello");
+    //mutate(&mut text);
+    //println!("{text}");
+
+    let student1: Student = Student::new(String::from("John"), String::from("Computer Science"));
+    let student2: Student = Student::new(String::from("Alice"), String::from("Mathematics"));
+    let student3: Student = Student::new(String::from("Bob"), String::from("Physics"));
+
+    let mut registry: Registry = Registry { students: Vec::new() };
+    Student::add_student(&mut registry, student1.name, student1.department);
+    Student::add_student(&mut registry, student2.name, student2.department);
+    Student::add_student(&mut registry, student3.name, student3.department);
+
+    println!("Registry:");
+    for student in &registry.students {
+        println!("Name: {}, Department: {}", student.name, student.department);
+    }
+
+    //find a student by name
+    let search_name = "Alice";
+    match Student::find_student(&registry, search_name) {
+        Some(student) => println!("Found student: Name: {}, Department: {}", student.name, student.department),
+        None => println!("Student with name '{}' not found.", search_name),
+    }
 }
 
 fn ex_1(x: i32, y: i32){
@@ -75,35 +99,4 @@ pub mod ex_6 {
 
 }
 
-mod mini_project {
-    
-    struct Student{
-        name: String,
-        department: String,
-    }
-
-    struct Registry{
-        students: Vec<Student>,
-    }
-
-    impl Student {
-        fn new(name:String, department:String) -> Student {
-            Student { name, department }
-        }
-
-       fn add_student(registry: &mut Registry, name: String, department: String) {
-            let student = Student::new(name, department);
-            registry.students.push(student);
-        }
-
-        fn find_student<'a>(registry: &'a Registry, name: &str) -> Option<&'a Student> {
-            for student in &registry.students {
-                if student.name == name {
-                    return Some(student);
-                }
-            }
-            None
-        }
-    }
-}
 
